@@ -21,15 +21,14 @@ const ADMIN_USERNAME = process.env.UNAME;
 const ADMIN_PASSWORD = process.env.PASSWORD || "admin123";
 const ADMIN_PASSWORD_HASH = bcrypt.hashSync(ADMIN_PASSWORD, 10);
 const PORT = Number(process.env.PORT) || 5002;
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/visiomatixcareers";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 //email on inquiry
 const resend = new Resend(process.env.EMAIL_API_KEY);
 
 // Ensure this sender is verified in Resend (domain or address)
-const SENDER_EMAIL = process.env.EMAIL_SENDER ;
-const RECEIVER_EMAIL = process.env.EMAIL_RECEIVER ;
+const SENDER_EMAIL = process.env.EMAIL_SENDER;
+const RECEIVER_EMAIL = process.env.EMAIL_RECEIVER;
 const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
 const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
@@ -273,6 +272,69 @@ app.get("/api/admin/articles", authenticateToken, async (_req, res) => {
     return res.status(500).json({ error: "Failed to fetch articles" });
   }
 });
+
+// Admin edit article
+app.put("/api/admin/articles/:articleId", authenticateToken, async (req, res) => {
+  const { articleId } = req.params;
+  const { category, title, description, readTime, imageData, imageUrl } = req.body;
+
+  if (!category || !title || !description || !readTime) {
+    return res.status(400).json({
+      error: "category, title, description and readTime are required",
+    });
+  }
+
+  try {
+    const existingArticle = await VmcArticle.findById(articleId);
+
+    if (!existingArticle) {
+      return res.status(404).json({ error: "Article not found" });
+    }
+
+    const uploadedImageUrl = await uploadArticleImageToCloudinary(imageData);
+
+    const updatedArticle = await VmcArticle.findByIdAndUpdate(
+      articleId,
+      {
+        category: String(category).trim(),
+        title: String(title).trim(),
+        description: String(description).trim(),
+        readTime: String(readTime).trim(),
+        imageUrl: String(
+          uploadedImageUrl || imageUrl || existingArticle.imageUrl || "",
+        ).trim(),
+      },
+      { new: true },
+    );
+
+    return res.json({ message: "Article updated successfully", article: updatedArticle });
+  } catch (error) {
+    console.error("Update article error:", error);
+    return res.status(500).json({ error: "Failed to update article" });
+  }
+});
+
+// Admin delete article
+app.delete(
+  "/api/admin/articles/:articleId",
+  authenticateToken,
+  async (req, res) => {
+    const { articleId } = req.params;
+
+    try {
+      const deletedArticle = await VmcArticle.findByIdAndDelete(articleId);
+
+      if (!deletedArticle) {
+        return res.status(404).json({ error: "Article not found" });
+      }
+
+      return res.json({ message: "Article deleted successfully" });
+    } catch (error) {
+      console.error("Delete article error:", error);
+      return res.status(500).json({ error: "Failed to delete article" });
+    }
+  },
+);
 
 // Admin delete subscriber
 app.delete(
