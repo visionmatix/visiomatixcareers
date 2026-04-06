@@ -124,6 +124,15 @@ const notifySubscribersAboutArticle = async (article) => {
 
 app.use("/api", router);
 
+app.get("/api/cron", async (req, res) => {
+  console.log("Cron job triggered");
+
+  // your logic here
+  // e.g. clean DB, send emails, etc.
+
+  res.status(200).send("Job done");
+});
+
 app.post("/api/send-email", async (req, res) => {
   console.log("Received email request:", req.body);
   const { name, email, phone, subject, message, payment } = req.body;
