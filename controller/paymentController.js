@@ -1,4 +1,4 @@
-import { Currency } from "lucide-react";
+
 import Razorpay from "razorpay";
 import "dotenv/config"
 
