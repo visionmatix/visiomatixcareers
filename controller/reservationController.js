@@ -73,7 +73,6 @@ const reservationController = async (req, res) => {
     let photoUrl = "";
     try {
       photoUrl = await uploadPhotoToCloudinary(passportPhoto);
-      console.log("Photo uploaded successfully:", photoUrl);
     } catch (uploadError) {
       console.error("Photo upload failed:", uploadError);
       // Continue even if photo upload fails, we'll send a link to admin
@@ -166,7 +165,6 @@ const reservationController = async (req, res) => {
     `;
 
     // Send email to admin
-    console.log("Sending reservation email to admin:", RECEIVER_EMAIL);
     const { error: adminEmailError } = await resend.emails.send({
       from: SENDER_EMAIL,
       to: RECEIVER_EMAIL,
