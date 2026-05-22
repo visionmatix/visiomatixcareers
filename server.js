@@ -2442,6 +2442,6 @@ app.use("/api", router);
 //db connection
 connectDb().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on ${PORT}`);
   });
 });
