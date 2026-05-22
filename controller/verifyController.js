@@ -2,7 +2,7 @@ import crypto from "crypto";
 import "dotenv/config";
 import Student from "../models/Student.js"; 
 import { Resend } from "resend";
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.EMAIL_API_KEY);
 
 //  Payment Verification
 export const verifyController = (req, res) => {
@@ -51,7 +51,7 @@ export const forgotPasswordController = async (req, res) => {
 
     // Send Email using Resend
     const response = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL, // example: onboardsending@resend.dev
+      from: process.env.EMAIL_SENDER, // example: onboardsending@resend.dev
       to: student.email,
       subject: "Visiomatix Media - Account Password Recovery",
       html: `
