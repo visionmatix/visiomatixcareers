@@ -53,6 +53,18 @@ const studentSchema = new mongoose.Schema(
       sparse: true,
       index: true,
     },
+
+    phone: {
+      type: String,
+      default: "",
+      required: true,
+      
+    },
+    city: {
+      type: String,
+      default: "",
+      required: true,
+    },
     password: {
       type: String,
       required: true,
@@ -64,11 +76,11 @@ const studentSchema = new mongoose.Schema(
     courseName: {
       type: String,
       required: true,
-      enum: ["CareerTrack", "Internship", "ITService", "DigitalService"],
+      enum: ["Courses", "Web Developer", "UI/UX Designer", "Fullstack Developer", "Graphic Designer", "Artificial Intelligence", "Software Testing & Quality Assurance", "Cloud Computing & Hosting Management", "App Development (IOS & Android)"],
     },
     profileImageUrl: {
       type: String,
-      default: null,
+      default: "",
     },
     totalFees: {
       type: Number,

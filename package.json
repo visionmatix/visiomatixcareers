@@ -18,6 +18,7 @@
     "cros": "^1.1.0",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "html-pdf-node": "^1.0.8",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.19.2",
     "razorpay": "^2.9.6",
